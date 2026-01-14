@@ -9,13 +9,18 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libzip-dev \
     zip \
-    unzip
+    unzip \
+    gnupg
 
 # Limpiar caché para reducir el tamaño de la imagen
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Instalar extensiones de PHP requeridas por Laravel y otras librerías comunes
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+
+# Instalar Node.js y NPM para compilar assets (versión 14 LTS compatible con Laravel 7)
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+    && apt-get install -y nodejs
 
 # Habilitar mod_rewrite para Laravel
 RUN a2enmod rewrite
@@ -36,6 +41,10 @@ COPY . /var/www
 
 # Eliminar composer.lock para evitar conflictos de versiones de PHP si se generó en un entorno diferente
 RUN rm -f composer.lock
+
+# Instalar dependencias de frontend y compilar assets
+RUN npm install \
+    && npm run prod
 
 # Instalar dependencias de PHP
 # Usamos --no-dev para producción, quítalo si es para desarrollo
