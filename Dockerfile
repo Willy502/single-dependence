@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libzip-dev \
     zip \
     unzip
 
@@ -14,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Instalar extensiones de PHP requeridas por Laravel y otras librerías comunes
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
 # Obtener la última versión de Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -24,6 +25,9 @@ WORKDIR /var/www
 
 # Copiar el contenido del proyecto al contenedor
 COPY . /var/www
+
+# Eliminar composer.lock para evitar conflictos de versiones de PHP si se generó en un entorno diferente
+RUN rm -f composer.lock
 
 # Instalar dependencias de PHP
 # Usamos --no-dev para producción, quítalo si es para desarrollo
