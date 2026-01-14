@@ -42,8 +42,9 @@ RUN rm -f composer.lock
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
 # Ajustar permisos (asumiendo que el servidor web usará www-data)
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 755 /var/www/storage
+RUN mkdir -p /var/www/storage /var/www/bootstrap/cache \
+    && chown -R www-data:www-data /var/www \
+    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 # Exponer el puerto 80 para Apache
 EXPOSE 80
