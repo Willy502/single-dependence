@@ -1,0 +1,19 @@
+.footer-back {
+    background-color: #110f10;
+}
+.footer-back li, a {
+    color: #fff;
+}
+.force-black {
+    color: #000;
+}
+
+.img-sngl {
+    object-fit: cover;
+    max-height: 600px;
+    width: 100%;
+}
+.inscribe-button {
+    color: #fff;
+    background-color: #DB3E00;
+}
